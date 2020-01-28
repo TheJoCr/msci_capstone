@@ -2,6 +2,10 @@ import pcapy
 from struct import *
 import socket
 import datetime
+from impacket.ImpactDecoder import EthDecoder
+from impacket.ImpactDecoder import IPDecoder
+from impacket.ImpactDecoder import TCPDecoder
+from scapy.all import *
 
 def main():
     dev = pcapy.findalldevs()[0]
@@ -19,7 +23,10 @@ def main():
     pc.loop(packet_limit, parse)
 
 def parse(header, packet):
-    print ('%s: captured %d bytes, truncated to %d bytes' %(datetime.datetime.now(), header.getlen(), header.getcaplen()))
+   # eth_packet = EthDecoder().decode(packet)
+   # print IP(packet).show()
+   print TCP(packet).show()
+   print hexdump(packet)
 
     
 
