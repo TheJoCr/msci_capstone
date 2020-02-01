@@ -1,5 +1,5 @@
 all:
-	gcc sniffer.cpp -o sniffer.out -lpcap
+	gcc -g sniffer.cpp -o sniffer.out -lpcap
 
 clean :
 	rm sniffer.out
