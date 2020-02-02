@@ -7,7 +7,6 @@
 #include <netinet/ip.h> /* to parse IP headers. */
 #include <netinet/tcp.h> /* to parse TCP headers. */
 
-
 // do somthing with the packet
 void getHTTPRequest(u_char *data, const struct pcap_pkthdr* header, const u_char* packet)
 {
@@ -54,23 +53,23 @@ void getHTTPRequest(u_char *data, const struct pcap_pkthdr* header, const u_char
 
 	// Get a bit of TCP info. Needs to be converted from network endianness
 	// to local.
-	uint16_t source_port = ntohs( tcp->th_sport );
-	uint16_t dest_port = ntohs( tcp->th_dport );
-	uint32_t seq_num = ntohs( tcp->th_seq );
-	uint32_t ack_num = ntohs( tcp->th_ack );
+	unsigned short source_port = ntohs( tcp->th_sport );
+	unsigned short dest_port = ntohs( tcp->th_dport );
+	unsigned int seq_num = ntohl( tcp->th_seq );
+	unsigned int ack_num = ntohl( tcp->th_ack );
 
 	/////////
 	// OUT //
 	/////////
 
-	printf("Packet from %s:%d to %s:%d (seq: %d, ack: %d)\n", 
+	printf("Packet from %s:%u to %s:%u (seq: %u, ack: %u)\n", 
 			source_ip_str, source_port,
 			dest_ip_str, dest_port,
 			seq_num, ack_num);
 
 	int body_size = header->caplen - ether_header_len - ip_header_len - tcp_data_offset;
 
-	if (body_size > 0) {
+	if (body_size != 0) {
 		printf("Body (%d bytes):\n", body_size);
 		for( int i = 0; i < body_size; i++ ) {
 			printf("%c", packet[i] );
